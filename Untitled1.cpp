@@ -1,4 +1,5 @@
 #include <iostream>
+#include<string>
 using namespace std;
 
 int input(char i)
@@ -67,39 +68,19 @@ void display(char t[3][3])
 }
 char restart(char t[3][3],char a)
 {
-	
-	
-	
-	
 		for(int i=0;i<3;i++) 
 		for(int j=0;j<3;j++) 
 		t[i][j]=' ';
 
-		system("cls");
-	cout<<"| | | |\n";
-	cout<<"| | | |\n";
-	cout<<"| | | |\n\n";
-	
+	display(t);
 cout<<"X or O?\n";		
 	 
 while(cin>>a)
 	{
-	
-	
-		system("cls");
-	cout<<"| | | |\n";
-	cout<<"| | | |\n";
-	cout<<"| | | |\n\n";
-	
+	display(t);
 cout<<"X or O?\n";
-	if(o(a))
-		break;
-	
-	else if(x(a))
-		{
-		cout<<"\n\nWhere do you wanna play?\n";
-		break;
-		}
+	if(o(a)||x(a)) 
+		break; 
 	}
 	
 	
@@ -139,7 +120,7 @@ void game(char t[3][3],char a)
 	if(	checkwin(t,a)  ||	checkwin(t,'x'))
 	break;
 		}
-		cout<<"\n\nWhere do you wanna play, "<<a<<"?\n";
+		cout<<"Where do you wanna play, "<<a<<"?\n";
 		
 		while(a!=' ') //checking whether it's empty - for the player
 			{	
@@ -166,17 +147,19 @@ void game(char t[3][3],char a)
 	break;
 			}
 		}
+	if(licznik==8)
+	{
+	system("cls");	
+		cout<<"\nThere was a tie!\n"; 
+	}	
 	}
 	
 
 int main()
 {
 	char t[3][3]={' '};	
-	char a;
-
-game(t,a);
-
-	
+	char a; 
+game(t,a); 
 	
 	return 0;
 }
