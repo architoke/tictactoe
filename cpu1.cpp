@@ -1,5 +1,4 @@
-#include <iostream> 
-#include <cstdio>
+#include <iostream>
 using namespace std;
 
 int input(char i)
