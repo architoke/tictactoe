@@ -1,7 +1,16 @@
-#include <iostream>
+#include <iostream> 
+#include <cstdio>
 using namespace std;
 
-int input(char i)
+ 
+struct tab {
+    char t[3][3];
+    char a;
+};
+
+
+
+int input(char i)//ok
 {
 	int j;
 	
@@ -16,21 +25,29 @@ int input(char i)
 	return j;
 }
 
-bool o(char a)
+bool o(char a)//ok
 {
 if(a=='O'||a=='0'||a=='o')
 return true;
 return false;
 }
-bool x(char a)
+bool x(char a)//ok
 {
 if(a=='X'||a=='x'||a=='k')
 return true;
 return false;
 }
 
-
-bool checkwin(char t[3][3], char a)
+bool fullcheck(tab v)//ok checks whether it's full
+{
+		bool s=1;
+			for(int i=0;i<3;i++) 
+		for(int j=0;j<3;j++) 
+		if(v.t[i][j]==' ')
+		s=0;
+		return s;
+}
+bool checkwin(char t[3][3], char a)//ok ale nie zmienione
 {
 	bool win=0;
 	for(int i = 0 ; i < 3 ; i ++)
@@ -49,7 +66,7 @@ bool checkwin(char t[3][3], char a)
 	}
 	return 0;
 }
-void display(char t[3][3])
+void display(char t[3][3])//ok
 {
 	system("cls");	
 		cout<<"  0 1 2 j\n";
@@ -65,29 +82,23 @@ void display(char t[3][3])
 	cout<<"i\n\n";	
 	
 }
-char restart(char t[3][3],char a)
+void restart(tab v)//ok
 {
+	v.a=' ';
 		for(int i=0;i<3;i++) 
 		for(int j=0;j<3;j++) 
-		t[i][j]=' ';
-
-	display(t);
-cout<<"X or O?\n";		
-	 
-while(cin>>a)
-	{
-	display(t);
-cout<<"X or O?\n";
-	if(o(a)||x(a)) 
+		v.t[i][j]=' ';
+do
+{
+	if(o(v.a)||x(v.a)) 
 		break; 
-	}
-	
-	
-	return a;
+display(v.t);
+cout<<"X or O?\n";
 }
-
-
-void cpu1(char t[3][3],char a)
+while(cin>>v.a);
+	 
+}
+void cpu1(char t[3][3],char a)//ok ale nie zmienione
 {
 	bool s=0;
 		for(int i=0;i<3;i++) 
@@ -100,76 +111,65 @@ void cpu1(char t[3][3],char a)
 		break;
 	}
 }
-
-void game(char t[3][3],char a)
+void playerturn(tab v)
 {
-	int licznik=0;
-	a=restart(t,a);
-	while(licznik<9)
-	{
-		if(o(a))
-		{	
-		
-			display(t);
-		if(	checkwin(t,a)  ||	checkwin(t,'x'))
-	break;
-		cpu1(t,'x')	;
-			display(t);
-			licznik++;
-	if(	checkwin(t,a)  ||	checkwin(t,'x'))
-	break;
+	cout<<"Where do you wanna play, "<<v.a<<"?\n";
+	while(v.a!=' ') //checking whether it's empty - for the player
+	{	
+		if(fullcheck(v)) 
+			break;
+		int temp_i=input('i'),temp_j=input('j');
+		if(v.t[temp_i][temp_j]==' ')
+		{
+			v.t[temp_i][temp_j]=v.a;
+			break;
 		}
-		cout<<"Where do you wanna play, "<<a<<"?\n";
-		
-		while(a!=' ') //checking whether it's empty - for the player
-			{	
-			bool s=1;
-			for(int i=0;i<3;i++) 
-		for(int j=0;j<3;j++) 
-		if(t[i][j]==' ')
-		s=0;
-		if(s) break;
-			
-			
-				int temp_i=input('i'),temp_j=input('j');
-				if(t[temp_i][temp_j]==' ')
-					{
-						t[temp_i][temp_j]=a;
-						licznik++;
-						break;
-					}
-					cout<<"\nThat's not an option!\n";
-					
-			}
-		
-		if(x(a))
-			{
-		display(t);
-		if(	checkwin(t,a)  ||	checkwin(t,'o'))
-	break;
-			cpu1(t,'o')	;
-			display(t);
-			licznik++;
-			if(	checkwin(t,a)  ||	checkwin(t,'o'))
-	break;
-			}
-			
-				if(licznik>8)
+		cout<<"\nThat's not an option!\n";
+	}	
+}
+
+void game(tab v)
+{
+	char ai=' ';
+	restart(v);
+	if(o(v.a))
 	{
-	system("cls");	
-		cout<<"\nThere was a tie!\n"; 
-		break;
+		v.t[1][1]='x';
+		ai='x';
 	}
+	else
+		ai='o';
+	display(v.t);
+	while(v.a!=' ')
+	{
+		playerturn(v);
+		
+		display(v.t);
+		if(	checkwin(v.t,v.a) || checkwin(v.t,ai) )
+			break;	 
+			
+		cpu1(v.t,ai);
+			
+		display(v.t);
+		if(	checkwin(v.t,v.a) || checkwin(v.t,ai) )
+			break;
 			
 			
-		}//while 
-	}//game
+		if(fullcheck(v))
+		{
+			system("cls");	
+			cout<<"\nThere was a tie!\n"; 
+			break;
+		}
+			
+					
+	}//while 
+}//game
 	
 
 int main()
 {
-	char t[3][3]={' '};	
-	char a;  
-game(t,a);  
+	tab v; 
+game(v);  
 	return 0;
 }
